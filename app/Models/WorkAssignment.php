@@ -18,9 +18,14 @@ class WorkAssignment extends Model
         'contact_number',
         'notes',
         'defects',
-        'images'
+        'images',
+        'latitude',
+        'longitude',
+        'live_camera', 
     ];
-
+    protected $casts = [
+        'images' => 'array',
+    ];
     public function booking()
     {
         return $this->belongsTo(CarWashBooking::class);

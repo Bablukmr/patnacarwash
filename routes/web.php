@@ -88,8 +88,8 @@ Route::group(['middleware' => 'teacher.auth'], function () {
     Route::prefix('update-work')->group(function () {
         Route::get('/{assignment}', [EmployeeListController::class, 'showUpdateForm'])
             ->name('teacher.update-work');
-        Route::post('/{assignment}', [EmployeeListController::class, 'updateWork'])
-            ->name('teacher.update-work.post');
+        Route::put('/{assignment}', [EmployeeListController::class, 'updateWork'])
+            ->name('teacher.update-work.put');
     });
     
     // Daily updates routes

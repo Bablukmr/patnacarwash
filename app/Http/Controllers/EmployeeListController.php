@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use OpenCage\Geocoder\Geocoder;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeListController extends Controller
 {
@@ -134,31 +135,53 @@ class EmployeeListController extends Controller
 
     public function updateWork(Request $request, WorkAssignment $assignment)
     {
+        // Validate the request
         $request->validate([
             'status' => 'required|in:in_progress,completed',
             'notes' => 'nullable|string',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+            'defects' => 'nullable|string',
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'live_camera' => 'required|string',  // Add validation for live_camera as a string
         ]);
 
         // Handle image uploads
         $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('public/work-updates');
-                $imagePaths[] = str_replace('public/', '', $path);
-            }
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('public/work-updates');
+            $imagePaths[] = str_replace('public/', '', $path);
         }
 
+        // Process live camera image
+        if ($request->has('live_camera')) {
+            $liveCameraData = $request->input('live_camera');
+            // Extract base64 string from the data URL
+            $imageData = explode(',', $liveCameraData)[1];
+            $imageData = base64_decode($imageData);
+
+            // Store the live camera image
+            $liveCameraPath = 'public/live_camera/' . uniqid('camera_') . '.png';
+            Storage::put($liveCameraPath, $imageData);
+            $liveCameraStoredPath = str_replace('public/', '', $liveCameraPath);
+        }
+
+        // Update work assignment with images, location, and live camera image
         $assignment->update([
             'status' => $request->status,
             'notes' => $request->notes,
-            'images' => $imagePaths ? json_encode($imagePaths) : $assignment->images
+            'defects' => $request->defects,
+            'images' => json_encode($imagePaths),
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'live_camera' => $liveCameraStoredPath ?? null,  // Store live camera image path
         ]);
 
         return redirect()->route('teacher.assignwork')->with('success', 'Work updated successfully');
     }
-
+    
+    
 
 
 
