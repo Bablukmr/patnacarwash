@@ -75,7 +75,6 @@
                                     <input type="text" class="form-control" name="pincode" placeholder="Enter pincode">
                                 </div>
                             </div>
-
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Add New Client</button>
                             </div>

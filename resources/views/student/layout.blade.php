@@ -179,7 +179,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="/admin/dashboard" class="brand-link">
+            <a href="/student/dashboard" class="brand-link">
                 <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
                 <span class="brand-text font-weight-light">CarWash</span>
@@ -223,7 +223,7 @@
 
                     </li>
                     <li class="nav-item menu-open">
-                        <a href="/student/status" class="nav-link ">
+                        <a href="/student/statusall" class="nav-link ">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
                                 Booking Status

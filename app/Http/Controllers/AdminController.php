@@ -88,4 +88,11 @@ class AdminController extends Controller
         $bookings = CarWashBooking::with('workAssignment.employee')->get();
         return view('admin.bookings', compact('bookings'));
     }
+
+    // Show the details of a specific booking
+    public function bookingDetails(CarWashBooking $booking)
+    {
+        $booking->load(['workAssignment.employee', 'workAssignment.dailyUpdates']);
+        return view('admin.booking-details', compact('booking'));
+    }
 }

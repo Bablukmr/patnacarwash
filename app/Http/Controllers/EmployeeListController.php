@@ -51,7 +51,8 @@ class EmployeeListController extends Controller
         return redirect()->route('admin.employeelist')->with('success', 'New Employee added successfully!');
     }
 
-    public function clientform(){
+    public function clientform()
+    {
         return view('admin.clientaddform');
     }
 
@@ -122,8 +123,10 @@ class EmployeeListController extends Controller
         $employeeId = Auth::guard('teacher')->id();
 
         $assignments = WorkAssignment::with('booking')
-            ->where('employee_id', $employeeId)
-            ->get();
+        ->where('employee_id', $employeeId)
+        ->orderBy('created_at', 'desc') // Order by creation date (newest first)
+        ->get();
+    
 
         return view('employee.assignwork', compact('assignments'));
     }
@@ -140,31 +143,49 @@ class EmployeeListController extends Controller
             'status' => 'required|in:in_progress,completed',
             'notes' => 'nullable|string',
             'defects' => 'nullable|string',
-            'images' => 'required|array',
+            'images' => 'nullable|array', // Images are optional
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'live_camera' => 'required|string',  // Add validation for live_camera as a string
+            'live_camera' => 'required|string',  // Validation for base64 live_camera image
         ]);
 
         // Handle image uploads
         $imagePaths = [];
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('public/work-updates');
-            $imagePaths[] = str_replace('public/', '', $path);
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                // Store in 'public/work-updates' under the 'public' disk
+                $path = $image->store('work-updates', 'public');  // Use 'public' disk
+                // Correct the path to ensure it's publicly accessible
+                $imagePaths[] = 'work-updates/' . basename($path); // Store relative path
+            }
         }
 
         // Process live camera image
+        $liveCameraStoredPath = null;
         if ($request->has('live_camera')) {
             $liveCameraData = $request->input('live_camera');
-            // Extract base64 string from the data URL
-            $imageData = explode(',', $liveCameraData)[1];
-            $imageData = base64_decode($imageData);
 
-            // Store the live camera image
-            $liveCameraPath = 'public/live_camera/' . uniqid('camera_') . '.png';
-            Storage::put($liveCameraPath, $imageData);
-            $liveCameraStoredPath = str_replace('public/', '', $liveCameraPath);
+            // Ensure base64 string is valid
+            if (strpos($liveCameraData, ',') !== false) {
+                $imageData = explode(',', $liveCameraData)[1]; // Extract base64 part
+                $imageData = base64_decode($imageData);
+
+                // Validate the decoded image data
+                if ($imageData === false) {
+                    return redirect()->back()->with('error', 'Invalid live camera image data.');
+                }
+
+                // Generate unique file name
+                $filename = uniqid('camera_') . '.png';
+                $liveCameraPath = 'live_camera/' . $filename;
+
+                // Store in 'storage/app/public/live_camera/' on the 'public' disk
+                Storage::disk('public')->put($liveCameraPath, $imageData);
+
+                // Use correct asset path for frontend display
+                $liveCameraStoredPath = 'live_camera/' . $filename; // Store relative path
+            }
         }
 
         // Update work assignment with images, location, and live camera image
@@ -172,67 +193,66 @@ class EmployeeListController extends Controller
             'status' => $request->status,
             'notes' => $request->notes,
             'defects' => $request->defects,
-            'images' => json_encode($imagePaths),
+            'images' => !empty($imagePaths) ? json_encode($imagePaths) : null,  // Store only if images exist
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'live_camera' => $liveCameraStoredPath ?? null,  // Store live camera image path
+            'live_camera' => $liveCameraStoredPath,  // Store live camera image path
         ]);
 
         return redirect()->route('teacher.assignwork')->with('success', 'Work updated successfully');
     }
-    
-    
 
 
 
-public function dailyUpdate(WorkAssignment $assignment)
-{
-    return view('employee.daily-update', compact('assignment'));
-}
 
-public function storeDailyUpdate(Request $request, WorkAssignment $assignment)
-{
-    $request->validate([
-        'status' => 'required|in:pending,in_progress,completed',
-        'notes' => 'nullable|string',
-        'images' => 'nullable|array',
-        'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-        'latitude' => 'required|numeric',
-        'longitude' => 'required|numeric',
-    ]);
+    public function dailyUpdate(WorkAssignment $assignment)
+    {
+        return view('employee.daily-update', compact('assignment'));
+    }
 
-    // Handle image uploads
-    $imagePaths = [];
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $path = $image->store('public/daily-updates');
-            $imagePaths[] = str_replace('public/', '', $path);
+    public function storeDailyUpdate(Request $request, WorkAssignment $assignment)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,in_progress,completed',
+            'notes' => 'nullable|string',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        // Handle image uploads
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('public/daily-updates');
+                $imagePaths[] = str_replace('public/', '', $path);
+            }
         }
+
+        // Geocoding
+        try {
+            $geocoder = new Geocoder(env('OPENCAGE_API_KEY'));
+            $result = $geocoder->geocode($request->latitude . ',' . $request->longitude);
+            $address = $result['results'][0]['formatted'] ?? 'Unknown location';
+        } catch (\Exception $e) {
+            Log::error('Geocoding error: ' . $e->getMessage());
+            $address = 'Location lookup failed';
+        }
+
+        // Create daily update
+        DailyUpdate::create([
+            'work_assignment_id' => $assignment->id,
+            'date' => now()->format('Y-m-d'),
+            'status' => $request->status,
+            'notes' => $request->notes,
+            'images' => $imagePaths,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'location_address' => $address
+        ]);
+
+        return redirect()->route('teacher.daily-updates')
+            ->with('success', 'Daily update submitted successfully');
     }
-
-    // Geocoding
-    try {
-        $geocoder = new Geocoder(env('OPENCAGE_API_KEY'));
-        $result = $geocoder->geocode($request->latitude . ',' . $request->longitude);
-        $address = $result['results'][0]['formatted'] ?? 'Unknown location';
-    } catch (\Exception $e) {
-        Log::error('Geocoding error: ' . $e->getMessage());
-        $address = 'Location lookup failed';
-    }
-
-    // Create daily update
-    DailyUpdate::create([
-        'work_assignment_id' => $assignment->id,
-        'date' => now()->format('Y-m-d'),
-        'status' => $request->status,
-        'notes' => $request->notes,
-        'images' => $imagePaths,
-        'latitude' => $request->latitude,
-        'longitude' => $request->longitude,
-        'location_address' => $address
-    ]);
-
-    return redirect()->route('teacher.daily-updates')
-        ->with('success', 'Daily update submitted successfully');
-}
 }

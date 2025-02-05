@@ -7,12 +7,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>DataTables</h1>
+                    <h1>Booking Management</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Home</a></li>
-                        <li class="breadcrumb-item active">DataTables</li>
+                        <li class="breadcrumb-item active">Bookings</li>
                     </ol>
                 </div>
             </div>
@@ -26,17 +26,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">List of Clients</h3>
+                            <h3 class="card-title">List of Bookings</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Assign Work</th>
+                                        <th>Status</th>
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Car Model</th>
@@ -44,10 +44,9 @@
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>Address</th>
-
-                                        @if(Auth::guard('admin')->check() && Auth::guard('admin')->user()->role === 'admin')
+                                        <!-- @if(Auth::guard('admin')->check() && Auth::guard('admin')->user()->role === 'admin')
                                         <th>User ID</th>
-                                        @endif
+                                        @endif -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,12 +60,21 @@
                                             <br>
                                             <a href="{{ route('admin.assign-work', $booking) }}" class="btn btn-sm btn-warning">
                                                 Change Assign
-                                            </a><br>
-                                            <small class="text-muted">Status: {{ $booking->workAssignment->status }}</small>
+                                            </a>
                                             @else
                                             <a href="{{ route('admin.assign-work', $booking) }}" class="btn btn-sm btn-success">
                                                 Assign Work
                                             </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($booking->workAssignment)
+                                            <a href="{{ route('admin.booking-details', $booking) }}" 
+                                               class="btn btn-sm btn-info">
+                                                View Status
+                                            </a>
+                                            @else
+                                            <span class="badge badge-secondary">Not Assigned</span>
                                             @endif
                                         </td>
                                         <td>{{ $booking->email }}</td>
@@ -76,14 +84,13 @@
                                         <td>{{ $booking->preferred_date }}</td>
                                         <td>{{ $booking->preferred_time }}</td>
                                         <td>{{ $booking->address }}</td>
-                                        @if(Auth::guard('admin')->check() && Auth::guard('admin')->user()->role === 'admin')
+                                        <!-- @if(Auth::guard('admin')->check() && Auth::guard('admin')->user()->role === 'admin')
                                         <td>{{ $booking->user_id }}</td>
-                                        @endif
+                                        @endif -->
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -124,15 +131,6 @@
             "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
     });
 </script>
 @endsection

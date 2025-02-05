@@ -1,6 +1,6 @@
 @extends('student.layout')
-@section('content')
 
+@section('content')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -26,7 +26,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">List of Clients</h3>
+                            <h3 class="card-title">List of Bookings</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -43,10 +43,10 @@
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>Address</th>
-                                        <th>Address</th>
                                         @if(Auth::guard('admin')->check() && Auth::guard('admin')->user()->role === 'admin')
                                         <th>User ID</th>
                                         @endif
+                                        <th>Status</th> <!-- Add the Status Column -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,10 +61,13 @@
                                         <td>{{ $booking->preferred_date }}</td>
                                         <td>{{ $booking->preferred_time }}</td>
                                         <td>{{ $booking->address }}</td>
-                                        <td>{{ $booking->address }}</td>
                                         @if(Auth::guard('admin')->check() && Auth::guard('admin')->user()->role === 'admin')
                                         <td>{{ $booking->user_id }}</td>
                                         @endif
+                                        <td>
+                                            <!-- Correctly pass bookingId into the route -->
+                                            <a href="{{ route('student.booking-status', ['bookingId' => $booking->id]) }}" class="btn btn-info btn-sm">View Status</a>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -110,15 +113,6 @@
             "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
     });
 </script>
 @endsection
