@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CarWashBooking;
+use App\Models\RegularClient;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -99,6 +100,8 @@ class AdminController extends Controller
     //regularClients
     public function regularClients()
     {
-        return view('admin.regular-clients');
+        $regularClients = RegularClient::with('user')->get();
+        $employees = User::where('role', 'teacher')->get();
+        return view('admin.regular-clients', compact('regularClients', 'employees'));
     }
 }

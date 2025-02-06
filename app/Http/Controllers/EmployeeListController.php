@@ -104,7 +104,7 @@ class EmployeeListController extends Controller
                 return redirect()->route('teacher.dashboard');
             }
         } else {
-            return redirect()->route('employee.login')->with('error', 'Invalid credentials');
+            return redirect()->route('teacher.login')->with('error', 'Invalid credentials');
         }
     }
 

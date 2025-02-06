@@ -69,7 +69,6 @@ class CarWashController extends Controller
         return view('student.bookings', compact('bookings'));
     }
 
-
     public function bookingStatus($bookingId)
     {
         // dd($bookingId);

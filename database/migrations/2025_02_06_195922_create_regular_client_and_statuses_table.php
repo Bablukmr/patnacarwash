@@ -11,28 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('work_assignments', function (Blueprint $table) {
+        Schema::create('regular_client_and_statuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->constrained('car_wash_bookings')->onDelete('cascade');
+            $table->foreignId('client_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('employee_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('assigned_by')->constrained('users')->onDelete('cascade');
-            $table->string('status')->default('assigned');
             $table->text('location')->nullable();
             $table->string('contact_number')->nullable();
-            $table->text('notes')->nullable();
-            $table->text('defects')->nullable();
-            $table->text('images')->nullable();
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 10, 8)->nullable();
             $table->timestamps();
         });
     }
+
+   
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('work_assignments');
+        Schema::dropIfExists('regular_client_and_statuses');
     }
 };
