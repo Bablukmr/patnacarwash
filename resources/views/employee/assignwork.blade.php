@@ -38,8 +38,8 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('teacher.update-work', $assignment) }}" 
-                                       class="btn btn-sm btn-primary">
+                                    <a href="{{ route('teacher.update-work', $assignment) }}"
+                                        class="btn btn-sm btn-primary">
                                         <i class="fas fa-edit"></i> Update
                                     </a>
                                 </td>
@@ -79,15 +79,17 @@
 
 <script>
     $(function() {
-        var table = $("#example1").DataTable({
+        $("#example1").DataTable({
             "responsive": true,
             "lengthChange": true,
             "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-            "pageLength": 10,
-        });
-
-        table.buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            "pageLength": 50, // Default to 50 entries per page
+            "lengthMenu": [
+                [50, 100, 200, 500, 800, 1000],
+                [50, 100, 200, 500, 800, 1000]
+            ],
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
 </script>
 @endsection

@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CarWashController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientListController;
 use App\Http\Controllers\EmployeeListController;
+use App\Http\Controllers\RecurringAssignmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkAssignmentController;
 use Illuminate\Support\Facades\Route;
@@ -11,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/', [ClientController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [ClientController::class, 'register']);
 //students
 Route::group(['prefix' => 'student'], function () {
 
@@ -29,6 +32,12 @@ Route::group(['prefix' => 'student'], function () {
 
         Route::post('booking', [CarWashController::class, 'storeBooking'])->name('student.booking');
         Route::get('bookings', [CarWashController::class, 'viewBookings'])->name('student.bookings');
+
+        // Student routes
+        // ... existing routes ...
+        Route::get('student/booking-status/{bookingId}', [CarWashController::class, 'bookingStatus'])->name('student.booking-status');
+        // ... existing routes ...
+        Route::get('statusall', [CarWashController::class, 'bookingStatusall'])->name('student.booking-statusall');
     });
 });
 
@@ -50,12 +59,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('logout', [AdminController::class, 'logout'])->name('admin.logout');
         Route::get('bookinglist', [AdminController::class, 'bookinglist'])->name('admin.bookinglist');
 
-        
+
         //EmployeeListController
         Route::get('employeelist', [EmployeeListController::class, 'index'])->name('admin.employeelist');
         Route::get('employeeform', [EmployeeListController::class, 'employeeform'])->name('admin.employeeform');
         Route::post('employeeform', [EmployeeListController::class, 'store'])->name('admin.store');
-       
+
         //ClientListController
         Route::get('clientlist', [ClientListController::class, 'index'])->name('admin.clientlist');
         Route::post('clientstore', [EmployeeListController::class, 'clientstore'])->name('admin.clientstore');
@@ -64,6 +73,19 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::get('assign-work/{booking}', [WorkAssignmentController::class, 'create'])->name('admin.assign-work');
         Route::post('assign-work/{booking}', [WorkAssignmentController::class, 'store'])->name('admin.assign-work.store');
+
+
+        // Admin routes
+        Route::group(['middleware' => 'admin.auth'], function () {
+            // ... existing routes ...
+            Route::get('booking-details/{booking}', [AdminController::class, 'bookingDetails'])->name('admin.booking-details');
+        });
+
+
+        // Admin routes
+        Route::get('regular-clients', [AdminController::class, 'regularClients'])->name('admin.regular-clients');
+        Route::post('mark-regular-client/{user}', [AdminController::class, 'markAsRegular'])->name('admin.mark-regular');
+        Route::resource('recurring-assignments', RecurringAssignmentController::class);
     });
 });
 
@@ -74,32 +96,32 @@ Route::group(['prefix' => 'teacher'], function () {
         Route::get('login', [EmployeeListController::class, 'login'])->name('teacher.login');
         Route::post('authenticate', [EmployeeListController::class, 'authenticate'])->name('teacher.authenticate');
     });
-// Routes for authenticated teacher
-Route::group(['middleware' => 'teacher.auth'], function () {
-    // Dashboard and basic routes
-    Route::get('dashboard', [EmployeeListController::class, 'dashboard'])->name('teacher.dashboard');
-    Route::get('logout', [EmployeeListController::class, 'logout'])->name('teacher.logout');
-    
-    // Work assignment routes
-    Route::get('assignwork', [EmployeeListController::class, 'assignwork'])->name('teacher.assignwork');
-    Route::get('assigned-works', [EmployeeListController::class, 'assignedWorks'])->name('teacher.assigned-works');
-    
-    // Work update routes (single entry)
-    Route::prefix('update-work')->group(function () {
-        Route::get('/{assignment}', [EmployeeListController::class, 'showUpdateForm'])
-            ->name('teacher.update-work');
-        Route::put('/{assignment}', [EmployeeListController::class, 'updateWork'])
-            ->name('teacher.update-work.put');
+    // Routes for authenticated teacher
+    Route::group(['middleware' => 'teacher.auth'], function () {
+        // Dashboard and basic routes
+        Route::get('dashboard', [EmployeeListController::class, 'dashboard'])->name('teacher.dashboard');
+        Route::get('logout', [EmployeeListController::class, 'logout'])->name('teacher.logout');
+
+        // Work assignment routes
+        Route::get('assignwork', [EmployeeListController::class, 'assignwork'])->name('teacher.assignwork');
+        Route::get('assigned-works', [EmployeeListController::class, 'assignedWorks'])->name('teacher.assigned-works');
+
+        // Work update routes (single entry)
+        Route::prefix('update-work')->group(function () {
+            Route::get('/{assignment}', [EmployeeListController::class, 'showUpdateForm'])
+                ->name('teacher.update-work');
+            Route::put('/{assignment}', [EmployeeListController::class, 'updateWork'])
+                ->name('teacher.update-work.put');
+        });
+
+        // Daily updates routes
+        Route::prefix('daily-updates')->group(function () {
+            Route::get('/', [EmployeeListController::class, 'dailyUpdatesList'])
+                ->name('teacher.daily-updates');
+            Route::get('/create/{assignment}', [EmployeeListController::class, 'dailyUpdate'])
+                ->name('teacher.daily-update.create');
+            Route::post('/store/{assignment}', [EmployeeListController::class, 'storeDailyUpdate'])
+                ->name('teacher.daily-update.store');
+        });
     });
-    
-    // Daily updates routes
-    Route::prefix('daily-updates')->group(function () {
-        Route::get('/', [EmployeeListController::class, 'dailyUpdatesList'])
-            ->name('teacher.daily-updates');
-        Route::get('/create/{assignment}', [EmployeeListController::class, 'dailyUpdate'])
-            ->name('teacher.daily-update.create');
-        Route::post('/store/{assignment}', [EmployeeListController::class, 'storeDailyUpdate'])
-            ->name('teacher.daily-update.store');
-    });
-});
 });

@@ -505,19 +505,15 @@
   $(function() {
     $("#example1").DataTable({
       "responsive": true,
-      "lengthChange": false,
+      "lengthChange": true,
       "autoWidth": false,
+      "pageLength": 50, // Default to 50 entries per page
+      "lengthMenu": [
+        [50, 100, 200, 500, 800, 1000],
+        [50, 100, 200, 500, 800, 1000]
+      ],
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
   });
 </script>
 @endsection

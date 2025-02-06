@@ -45,7 +45,7 @@
                                     <select class="form-control" name="role" required>
                                         <option value="teacher" selected>Employee</option>
                                         <
-                                    </select>
+                                            </select>
                                 </div>
 
                                 <div class="form-group">
@@ -75,7 +75,7 @@
                             </div>
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Add Teacher</button>
+                                <button type="submit" class="btn btn-primary">Add Employee</button>
                             </div>
                         </form>
                     </div>

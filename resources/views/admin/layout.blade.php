@@ -202,103 +202,37 @@
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
-                    <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                    <li class="nav-item menu-open">
-                        <a href="/admin/dashboard" class="nav-link active">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item menu-open">
-                        <a href="{{ route('admin.clientlist') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Client List
-                            </p>
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item menu-open">
-                        <a href="{{ route('admin.bookinglist') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Booking List
-                            </p>
-                        </a>
-
-                    </li>
-                    <li class="nav-item menu-open">
-                        <a href="{{ route('admin.employeelist') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Employee List
-                            </p>
-                        </a>
-
-                    </li>
-
-
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p>
-                                Charts
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
+                        <a href="/admin/dashboard" class="nav-link">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>Dashboard</p>
                         </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="pages/charts/chartjs.html" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>ChartJS</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="pages/charts/flot.html" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Flot</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="pages/charts/inline.html" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Inline</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="pages/charts/uplot.html" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>uPlot</p>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-
-                    <li class="nav-item ">
-                        <a href="{{ route('admin.logout') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p>
-                                Logout
-                            </p>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.clientlist') }}" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>Client List</p>
                         </a>
-
                     </li>
-
-                    <!-- <li class="nav-item ">
-                        <p class="nav-link ">
-                            Name: {{ Auth::guard('admin')->user()->name ?? 'Guest' }}<br>
-                            Email: {{ Auth::guard('admin')->user()->email ?? 'Guest' }}
-                        </p>
-                    </li> -->
-
+                    <li class="nav-item">
+                        <a href="{{ route('admin.bookinglist') }}" class="nav-link">
+                            <i class="nav-icon fas fa-calendar-check"></i>
+                            <p>Booking List</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.employeelist') }}" class="nav-link">
+                            <i class="nav-icon fas fa-user-tie"></i>
+                            <p>Employee List</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.logout') }}" class="nav-link">
+                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <p>Logout</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -362,7 +296,17 @@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="dist/js/pages/dashboard.js"></script>
     @yield('extraJs')
-
+    <script>
+        $(document).ready(function() {
+            var currentUrl = window.location.href;
+            $('.nav-link').each(function() {
+                if (this.href === currentUrl) {
+                    $(this).addClass('active');
+                    $(this).closest('.nav-item').addClass('menu-open');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -179,7 +179,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="/admin/dashboard" class="brand-link">
+            <a href="/teacher/dashboard" class="brand-link">
                 <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
                 <span class="brand-text font-weight-light">CarWash</span>
@@ -199,48 +199,37 @@
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
-                    <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                    <li class="nav-item menu-open">
-                        <a href="{{ route('teacher.dashboard') }}" class="nav-link active">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item">
+                        <a href="{{ route('teacher.dashboard') }}" class="nav-link {{ request()->routeIs('teacher.dashboard') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
+                            <p>Dashboard</p>
                         </a>
-
                     </li>
 
-                    <li class="nav-item menu-open">
-                        <a href="{{ route('teacher.assignwork') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Assign Work
-                            </p>
+                    <li class="nav-item">
+                        <a href="{{ route('teacher.assignwork') }}" class="nav-link {{ request()->routeIs('teacher.assignwork') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>Assign Work</p>
                         </a>
-
-                    </li>
-                    <li class="nav-item ">
-                        <a href="{{ route('teacher.logout') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p>
-                                Logout
-                            </p>
-                        </a>
-
                     </li>
 
-                    <!-- <li class="nav-item ">
-                        <p class="nav-link ">
+                    <li class="nav-item">
+                        <a href="{{ route('teacher.logout') }}" class="nav-link">
+                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <p>Logout</p>
+                        </a>
+                    </li>
+
+                    <!-- <li class="nav-item">
+                        <p class="nav-link">
                             Name: {{ Auth::guard('teacher')->user()->name ?? 'Guest' }}<br>
                             Email: {{ Auth::guard('teacher')->user()->email ?? 'Guest' }}
                         </p>
                     </li> -->
-
                 </ul>
             </nav>
+
             <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
@@ -302,7 +291,17 @@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="dist/js/pages/dashboard.js"></script>
     @yield('extraJs')
-
+    <script>
+        $(document).ready(function() {
+            var currentUrl = window.location.href;
+            $('.nav-link').each(function() {
+                if (this.href === currentUrl) {
+                    $(this).addClass('active');
+                    $(this).closest('.nav-item').addClass('menu-open');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

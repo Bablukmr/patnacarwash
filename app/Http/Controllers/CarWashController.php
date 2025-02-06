@@ -32,7 +32,7 @@ class CarWashController extends Controller
             'payment_method' => 'required|string|in:cash_on_delivery,credit_card,upi',
             'car_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        
+
 
         // Create a new car wash booking record
         $booking = new CarWashBooking();
@@ -56,19 +56,44 @@ class CarWashController extends Controller
     // View all bookings (for admin and user who booked)
     public function viewBookings()
     {
-        // Check if the user is admin or the user who made the booking
         $userId = Auth::id();
         $isAdmin = Auth::user()->role === 'admin';
 
-        // Fetch bookings based on the role
+        // Fetch bookings ordered by newest first
         if ($isAdmin) {
-            // Admin can see all bookings
-            $bookings = CarWashBooking::all();
+            $bookings = CarWashBooking::latest()->get(); // Show newest first
         } else {
-            // Regular user can see only their own bookings
-            $bookings = CarWashBooking::where('user_id', $userId)->get();
+            $bookings = CarWashBooking::where('user_id', $userId)->latest()->get();
         }
 
         return view('student.bookings', compact('bookings'));
+    }
+
+
+    public function bookingStatus($bookingId)
+    {
+        // dd($bookingId);
+        // Retrieve the booking details along with its work assignment and updates
+        $booking = CarWashBooking::with(['workAssignment', 'workAssignment.dailyUpdates'])
+            ->where('id', $bookingId)
+            ->first();
+
+        // Check if the booking exists
+        if (!$booking) {
+            return redirect()->route('student.bookings')->with('error', 'Booking not found.');
+        }
+
+        return view('student.booking-status', compact('booking'));
+    }
+
+    public function bookingStatusall()
+    {
+        $user = Auth::user();
+        $bookings = CarWashBooking::with(['workAssignment.employee', 'workAssignment.dailyUpdates'])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('student.statusall', compact('bookings'));
     }
 }

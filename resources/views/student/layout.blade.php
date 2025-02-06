@@ -179,7 +179,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="/admin/dashboard" class="brand-link">
+            <a href="/student/dashboard" class="brand-link">
                 <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
                 <span class="brand-text font-weight-light">CarWash</span>
@@ -199,50 +199,38 @@
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
-                    <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                    <li class="nav-item menu-open">
-                        <a href="/student/dashboard" class="nav-link active">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                    <li class="nav-item">
+                        <a href="{{ url('/student/dashboard') }}" class="nav-link {{ request()->is('student/dashboard') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Booking
-                            </p>
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item menu-open">
-                        <a href="{{ route('student.bookings') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Booking List
-                            </p>
-                        </a>
-
-                    </li>
-                    <li class="nav-item menu-open">
-                        <a href="/student/status" class="nav-link ">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Booking Status
-                            </p>
+                            <p>Booking</p>
                         </a>
                     </li>
 
-                    <li class="nav-item ">
-                        <a href="{{ route('student.logout') }}" class="nav-link ">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p>
-                                Logout
-                            </p>
+                    <li class="nav-item">
+                        <a href="{{ route('student.bookings') }}" class="nav-link {{ request()->is('student/bookings') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>Booking List</p>
                         </a>
-
                     </li>
-                  
+
+                    <li class="nav-item">
+                        <a href="{{ url('/student/statusall') }}" class="nav-link {{ request()->is('student/statusall') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-info-circle"></i>
+                            <p>Booking Status</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('student.logout') }}" class="nav-link">
+                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <p>Logout</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
+
             <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
@@ -304,7 +292,17 @@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="dist/js/pages/dashboard.js"></script>
     @yield('extraJs')
-
+    <script>
+        $(document).ready(function() {
+            var currentUrl = window.location.href;
+            $('.nav-link').each(function() {
+                if (this.href === currentUrl) {
+                    $(this).addClass('active');
+                    $(this).closest('.nav-item').addClass('menu-open');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

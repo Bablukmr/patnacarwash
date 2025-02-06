@@ -13,10 +13,10 @@ class ClientListController extends Controller
      */
     public function index()
     {
-        // Replace 'Student' with the actual value if it's a string
-        $clients = User::where('role', 'Student')->get();
+        $clients = User::where('role', 'Student')->orderBy('created_at', 'desc')->get();
         return view('admin.clientlist', compact('clients'));
     }
+
 
     /**
      * Show the form for creating a new resource.
