@@ -12,7 +12,7 @@
     'url' => 'http://localhost:8000',
     'frontend_url' => 'http://localhost:3000',
     'asset_url' => NULL,
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Kolkata',
     'locale' => 'en',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
@@ -178,8 +178,8 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\framework/cache/data',
-        'lock_path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\framework/cache/data',
+        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\framework/cache/data',
+        'lock_path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -234,7 +234,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'wash_yufguhoh',
+        'database' => '01carwash',
         'prefix' => '',
         'foreign_key_constraints' => true,
         'busy_timeout' => NULL,
@@ -247,7 +247,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'wash_yufguhoh',
+        'database' => '01carwash',
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -267,7 +267,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'wash_yufguhoh',
+        'database' => '01carwash',
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -287,7 +287,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'wash_yufguhoh',
+        'database' => '01carwash',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -302,7 +302,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'wash_yufguhoh',
+        'database' => '01carwash',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -351,14 +351,14 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\app/private',
+        'root' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\app/private',
         'serve' => true,
         'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\app/public',
+        'root' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\app/public',
         'url' => 'http://localhost:8000/storage',
         'visibility' => 'public',
         'throw' => false,
@@ -378,7 +378,7 @@
     ),
     'links' => 
     array (
-      'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\public\\storage' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\app/public',
+      'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\public\\storage' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\app/public',
     ),
   ),
   'logging' => 
@@ -403,14 +403,14 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\logs/laravel.log',
         'level' => 'debug',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
         'replace_placeholders' => true,
@@ -475,7 +475,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\logs/laravel.log',
+        'path' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -551,7 +551,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\resources\\views/vendor/mail',
+        0 => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -646,7 +646,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\framework/sessions',
+    'files' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -772,9 +772,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\resources\\views',
+      0 => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\resources\\views',
     ),
-    'compiled' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\maiiinn_booking\\storage\\framework\\views',
+    'compiled' => 'C:\\Users\\dablukumar\\OneDrive\\Desktop\\Self-Work\\carwash_booking_05_23_2025\\storage\\framework\\views',
   ),
   'tinker' => 
   array (

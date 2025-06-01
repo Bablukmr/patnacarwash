@@ -40,24 +40,36 @@
 
                     @if($booking->workAssignment)
                     <hr>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>Images:</h5>
-                            @foreach(optional($booking->workAssignment->dailyUpdates) ?? [] as $update)
-                            @if($update->images)
-                            @foreach(json_decode($update->images) as $image)
-                            <div class="mb-2">
-                                <img src="{{ asset('storage/' . $image) }}" class="img-fluid rounded" alt="Update Image" style="max-width: 100%; max-height: 300px; object-fit: cover;">
-                            </div>
-                            @endforeach
+                   
+                   <div class="row">
+                       <div class="col-md-6">
+                        @if(!empty($booking->workAssignment) && !empty($booking->workAssignment->images))
+                            @php
+                                $images = json_decode($booking->workAssignment->images, true);
+                            @endphp
+                            @if(is_array($images) && count($images) > 0)
+                                @foreach($images as $image)
+                                    <div class="col-md-3 mb-3">
+                                        <img src="{{ asset('storage//app/public/' . ltrim($image, '/')) }}" class="img-thumbnail" alt="Work Image" style="max-width: 100%; max-height: 250px; object-fit: cover;">
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="col-12">
+                                    <p>No images uploaded</p>
+                                </div>
                             @endif
-                            @endforeach
-                        </div>
+                        @else
+                            <div class="col-12">
+                                <p>No images uploaded</p>
+                            </div>
+                        @endif
+                    </div>
+                   
 
                         <div class="col-md-6">
                             <h5>Live Camera Image:</h5>
                             @if($booking->workAssignment->live_camera)
-                            <img src="{{ asset('storage/' . $booking->workAssignment->live_camera) }}" class="img-fluid rounded" alt="Live Camera Image" style="max-width: 100%; max-height: 300px; object-fit: cover;">
+                            <img src="{{ asset('storage/app/public/' . $booking->workAssignment->live_camera) }}" class="img-fluid rounded" alt="Live Camera Image" style="max-width: 100%; max-height: 300px; object-fit: cover;">
                             @else
                             <p>No live camera image available</p>
                             @endif

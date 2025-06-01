@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\RegularClientAndStatus;
+use App\Models\User;
+use App\Models\WorkAssignment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RegularClientAndStatusController extends Controller
 {
@@ -12,54 +15,58 @@ class RegularClientAndStatusController extends Controller
      */
     public function index()
     {
-        return view('admin.regular_client.index');
+        $regularClients = WorkAssignment::where('client_types', 'regular')->latest()->get();
+        return view('admin.regular_clients.index', compact('regularClients'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
+    // Show the form to create a new regular client and status (Admin View)
     public function create()
     {
-        //
+        $clients = User::where('role', 'teacher')->get();
+        $employees = User::where('role', 'student')->get();
+        return view('admin.regular_clients.create', compact('clients', 'employees'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store a new regular client and status (Admin View)
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'client_id' => 'required|exists:users,id',
+            'employee_id' => 'required|exists:users,id',
+            'location' => 'nullable|string',
+            'contact_number' => 'nullable|string',
+        ]);
+        // Get the authenticated admin's ID
+        $adminId = Auth::guard('admin')->id(); // This will return only the ID, not an object
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(RegularClientAndStatus $regularClientAndStatus)
-    {
-        //
-    }
+        if (!$adminId) {
+            return redirect()->back()->with('error', 'Only admins can assign clients.');
+        }
+        RegularClientAndStatus::create([
+            'client_id' => $request->client_id,
+            'employee_id' => $request->employee_id,
+            'assigned_by' => $adminId, // Ensuring it's the logged-in admin
+            'location' => $request->location,
+            'contact_number' => $request->contact_number,
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(RegularClientAndStatus $regularClientAndStatus)
-    {
-        //
+        return redirect()->route('admin.regular-clients-list')->with('success', 'Regular client assigned successfully!');
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, RegularClientAndStatus $regularClientAndStatus)
+    // Show details of a regular client and status (Admin, Client, Employee View)
+    public function show(RegularClientAndStatus $regularClient)
     {
-        //
+        return view('regular_clients.show', compact('regularClient'));
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(RegularClientAndStatus $regularClientAndStatus)
+    public function clientIndex()
     {
-        //
+        // Use the 'client' guard
+        $regularClients = RegularClientAndStatus::where('client_id', auth()->id())
+            ->with(['employee', 'assignedBy'])
+            ->get();
+        return view('student.regular_clients.index', compact('regularClients'));
     }
 }

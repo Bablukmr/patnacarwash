@@ -50,13 +50,13 @@
                                         <td>{{ $client->name }}</td>
                                         <td>{{ $client->email }}</td>
                                         <td>{{ $client->phone_number }}</td>
-                                        <td>{{ ucfirst($client->role) }}</td>
+                                        <td>Employee</td>
                                         <td>{{ $client->address ?? 'N/A' }}</td>
                                         <td>{{ $client->city ?? 'N/A' }}</td>
                                         <td>{{ $client->pincode ?? 'N/A' }}</td>
                                         <td>
                                             <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                                            <form action="{#" method="POST" style="display:inline-block;">
+                                            <form action="{{ route('admin.employeedelete',($client->id)) }}" method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>

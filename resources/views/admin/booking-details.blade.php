@@ -50,7 +50,7 @@
                 @endphp
                 @foreach($images as $image)
                 <div class="col-md-3 mb-3">
-                    <img src="{{ asset('storage/' . $image) }}" class="img-thumbnail" alt="Work Image">
+                    <img src="{{ asset('storage/app/public/' . $image) }}" class="img-thumbnail" alt="Work Image">
                 </div>
                 @endforeach
                 @else
@@ -64,7 +64,7 @@
             <h5>Live Camera Image</h5>
             <div class="row">
                 <div class="col-md-6">
-                    <img src="{{ asset('storage/'. $booking->workAssignment->live_camera) }}" class="img-thumbnail" alt="Live Camera Image">
+                    <img src="{{ asset('storage/app/public/'. $booking->workAssignment->live_camera) }}" class="img-thumbnail" alt="Live Camera Image">
                 </div>
             </div>
             @endif

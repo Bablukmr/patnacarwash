@@ -6,16 +6,24 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientListController;
 use App\Http\Controllers\EmployeeListController;
 use App\Http\Controllers\RecurringAssignmentController;
+use App\Http\Controllers\RegularClientAndStatusController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkAssignmentController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/clear-cache', function () {
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    Artisan::call('optimize');
+    return "Cache cleared!";
 });
+
 Route::get('/', [ClientController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [ClientController::class, 'register']);
-//students
+Route::post('/register', [ClientController::class, 'register'])->name('registerss');
+
 Route::group(['prefix' => 'student'], function () {
 
     //guest
@@ -38,6 +46,10 @@ Route::group(['prefix' => 'student'], function () {
         Route::get('student/booking-status/{bookingId}', [CarWashController::class, 'bookingStatus'])->name('student.booking-status');
         // ... existing routes ...
         Route::get('statusall', [CarWashController::class, 'bookingStatusall'])->name('student.booking-statusall');
+
+
+        Route::get('my-regular-clients', [RegularClientAndStatusController::class, 'clientIndex'])->name('client.regular-clients.index');
+
     });
 });
 
@@ -69,7 +81,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('clientlist', [ClientListController::class, 'index'])->name('admin.clientlist');
         Route::post('clientstore', [EmployeeListController::class, 'clientstore'])->name('admin.clientstore');
         Route::get('clientform', [EmployeeListController::class, 'clientform'])->name('admin.clientform');
-        //assignwork
+        Route::delete('clientdelete/{id}', [EmployeeListController::class, 'clientdelete'])->name('admin.clientdelete');
+        Route::delete('employeedelete/{id}', [EmployeeListController::class, 'employeedelete'])->name('admin.employeedelete');
+
+        Route::get('employeeedit/{id}', [EmployeeListController::class, 'employeeedit'])->name('admin.employeeedit');
+        Route::put('clientupdate/{id}', [EmployeeListController::class, 'clientupdate'])->name('admin.clientupdate');
+       //assignwork
 
         Route::get('assign-work/{booking}', [WorkAssignmentController::class, 'create'])->name('admin.assign-work');
         Route::post('assign-work/{booking}', [WorkAssignmentController::class, 'store'])->name('admin.assign-work.store');
@@ -86,6 +103,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('regular-clients', [AdminController::class, 'regularClients'])->name('admin.regular-clients');
         Route::post('mark-regular-client/{user}', [AdminController::class, 'markAsRegular'])->name('admin.mark-regular');
         Route::resource('recurring-assignments', RecurringAssignmentController::class);
+
+        //regularClients
+        Route::get('regular-clients-list', [RegularClientAndStatusController::class, 'index'])->name('admin.regular-clients-list');
+        Route::get('regular-clients-list/create', [RegularClientAndStatusController::class, 'create'])->name('regular-clients-list.create');
+        Route::post('regular-clients-list', [RegularClientAndStatusController::class, 'store'])->name('regular-clients-list.store');
     });
 });
 

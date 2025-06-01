@@ -84,11 +84,15 @@ class AdminController extends Controller
         return redirect()->route('admin.login')->with('success', 'Registration successful. Please log in.');
     }
 
-    public function bookinglist()
-    {
-        $bookings = CarWashBooking::with('workAssignment.employee')->get();
-        return view('admin.bookings', compact('bookings'));
-    }
+   public function bookinglist()
+{
+    $bookings = CarWashBooking::with('workAssignment.employee')
+        ->orderBy('created_at', 'desc') // Order by newest first
+        ->get();
+    
+    return view('admin.bookings', compact('bookings'));
+}
+
 
     // Show the details of a specific booking
     public function bookingDetails(CarWashBooking $booking)

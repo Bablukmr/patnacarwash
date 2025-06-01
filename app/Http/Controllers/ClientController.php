@@ -16,6 +16,7 @@ class ClientController extends Controller
     // Handle the registration form submission
     public function register(Request $request)
     {
+        // dd($request->all());
         // Validate the form data
         $request->validate([
             'name' => 'required|string|max:255',

@@ -15,6 +15,7 @@ class WorkAssignment extends Model
         'assigned_by',
         'status',
         'location',
+        'client_type',
         'contact_number',
         'notes',
         'defects',

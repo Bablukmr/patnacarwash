@@ -13,11 +13,14 @@ use Illuminate\Support\Facades\Storage;
 
 class EmployeeListController extends Controller
 {
-    public  function index()
-    {
-        $clients = User::where('role', 'teacher')->get();
-        return view('admin.employeeList', compact('clients'));
-    }
+  public function index()
+{
+    $clients = User::where('role', 'teacher')
+        ->orderBy('created_at', 'desc') // Newest first
+        ->get();
+
+    return view('admin.employeelist', compact('clients'));
+}
 
     public function employeeform()
     {
@@ -55,6 +58,60 @@ class EmployeeListController extends Controller
     {
         return view('admin.clientaddform');
     }
+
+    public function clientdelete( $id)
+    {
+        // dd($id);
+        $client = User::findOrFail($id);
+        $client->delete();
+        return redirect()->route('admin.clientlist')->with('success', 'Client deleted successfully!');
+    }
+    public function employeedelete( $id)
+    {
+        // dd($id);
+        $client = User::findOrFail($id);
+        $client->delete();
+
+        return redirect()->route('admin.employeelist')->with('success', 'Employee deleted successfully!');
+    }
+    public function employeeedit($id)
+    {
+        $client = User::findOrFail($id);
+        // dd($client);
+        return view('student.edit', compact('client'));
+    }
+
+// public function clientedit($id)
+// {
+//     $client = User::findOrFail($id);
+//     return view('admin.clients.edit', compact('client'));
+// }
+
+public function clientupdate(Request $request, $id)
+{
+    $client = User::findOrFail($id);
+
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,'.$id,
+        'phone' => 'required|string|max:15',
+        'address' => 'required|string',
+        'city' => 'required|string',
+        'state' => 'required|string',
+        'pincode' => 'required|string|max:6',
+        'role' => 'required|in:client,employee,admin',
+    ]);
+
+    // Update password only if provided
+    if ($request->filled('password')) {
+        $validated['password'] = Hash::make($request->password);
+    }
+
+    $client->update($validated);
+
+    return redirect()->route('admin.clientlist')
+           ->with('success', 'Client updated successfully');
+}
 
     public function clientstore(Request $request)
     {
@@ -126,7 +183,7 @@ class EmployeeListController extends Controller
         ->where('employee_id', $employeeId)
         ->orderBy('created_at', 'desc') // Order by creation date (newest first)
         ->get();
-    
+
 
         return view('employee.assignwork', compact('assignments'));
     }

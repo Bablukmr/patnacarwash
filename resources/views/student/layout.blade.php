@@ -40,10 +40,10 @@
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
+                    <a href="/student/dashboard" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
+                    <a href="https://booking.patnacarwash.com/" class="nav-link">Contact</a>
                 </li>
             </ul>
 
@@ -162,7 +162,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                    <a class="nav-link" data-widget="fullscreen"  role="button">
                         <i class="fas fa-expand-arrows-alt"></i>
                     </a>
                 </li>
@@ -180,7 +180,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="/student/dashboard" class="brand-link">
-                <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                <img src="dist/img/logo1.jpeg" alt="CarWash Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
                 <span class="brand-text font-weight-light">CarWash</span>
             </a>
@@ -221,12 +221,25 @@
                             <p>Booking Status</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ url('/student/my-regular-clients') }}" class="nav-link {{ request()->is('/student/my-regular-clients') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>Regular Booking</p>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a href="{{ route('student.logout') }}" class="nav-link">
                             <i class="nav-icon fas fa-sign-out-alt"></i>
                             <p>Logout</p>
                         </a>
+                    </li>
+                    
+                         <li class="nav-item">
+                          <a class="nav-link">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>Name: {{ Auth::user()->name ?? 'Guest' }}</p>
+                           </a>
                     </li>
                 </ul>
             </nav>
